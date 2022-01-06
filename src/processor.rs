@@ -18,7 +18,7 @@ impl Processor {
         let instruction = EscrowInstruction::unpack(instruction_data)?;
 
         match instruction {
-            EscrowInstruction::InitEscrow { amount: u64 } => {
+            EscrowInstruction::InitEscrow { amount } => {
                 msg!("Instruction: InitEscrow");
                 Self::process_init_escrow(accounts, amount, program_id)
             },
@@ -30,7 +30,7 @@ impl Processor {
         let account_info_iter = &mut accounts.iter();
         let initializer = next_account_info(account_info_iter)?;
 
-        if !initializer.is_signed {
+        if !initializer.is_signer {
             return Err(ProgramError::MissingRequiredSignature);
         }
 
@@ -77,14 +77,14 @@ impl Processor {
         // This is done by calling the token program from this Escrow program.
         // This is called Cross-Program Invocation.
         let token_program = next_account_info(account_info_iter)?;
-        let owner_change_ix = spl_token::instruction::set_authority(
+        let owner_change_ix = spl_token::instruction::set_authority( // CPI done here.
             token_program.key,
             temp_token_account.key,
             Some(&pda),
             spl_token::instruction::AuthorityType::AccountOwner,
             initializer.key,
             &[&initializer.key],
-        );
+        )?;
 
         // Invoke.
         msg!("Calling the token program to transfer token account ownership...");

@@ -13,7 +13,6 @@ pub enum EscrowInstruction {
     /// 3. [writable]: The escrow account, it will hold all necessary information about the trade.
     /// 4. []: The rent sysvar (what is this?)
     /// 5. []: The token program.
-
     InitEscrow { 
         amount: u64
     }
@@ -34,8 +33,9 @@ impl EscrowInstruction {
     fn unpack_amount(input: &[u8]) -> Result<u64, ProgramError> {
         let amount = input
             .get(..8)
-            .and_then(|slice| slice.try_into().ok)
-            .map(u64::from_le_bytes)?;
+            .and_then(|slice| slice.try_into().ok())
+            .map(u64::from_le_bytes)
+            .ok_or(InvalidInstruction)?;
 
         Ok(amount)
     }

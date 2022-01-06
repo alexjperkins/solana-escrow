@@ -71,10 +71,10 @@ impl Pack for Escrow {
             expected_amount,
         } = self;
 
-        is_initialized_dst = *is_initialized as u8;
-        initializer_pubkey_dst = copy_from_slice(initializer_pubkey.as_ref());
-        temp_token_account_pubkey_dst = copy_from_slice(temp_token_account_pubkey.as_ref());
-        initializer_token_to_receive_account_pubkey_dst = copy_from_slice(initializer_token_to_receive_account_pubkey.as_ref());
-        expected_amount_dst = expected_amount.to_le_bytes();
+        is_initialized_dst[0] = *is_initialized as u8;
+        initializer_pubkey_dst.copy_from_slice(initializer_pubkey.as_ref());
+        temp_token_account_pubkey_dst.copy_from_slice(temp_token_account_pubkey.as_ref());
+        initializer_token_to_receive_account_pubkey_dst.copy_from_slice(initializer_token_to_receive_account_pubkey.as_ref());
+        *expected_amount_dst = expected_amount.to_le_bytes();
     }
 }

@@ -20,7 +20,7 @@ mod test {
         assert_matches::*,
         solana_program::instruction::{AccountMeta, Instruction},
         solana_program_test::*,
-        solana_sdk::{signature::Signer, transaction::Transaction},
+      solana_sdk::{signature::Signer, transaction::Transaction},
     };
 
     #[tokio::test]
